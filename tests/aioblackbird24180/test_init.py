@@ -2,10 +2,10 @@
 
 from unittest.mock import patch
 
+from aiohttp.http_exceptions import BadHttpMessage
 import pytest
 
 from aioblackbird24180 import Blackbird24180, MatrixState
-from aiohttp.http_exceptions import BadHttpMessage
 
 
 def test_matrix_state():
