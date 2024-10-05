@@ -1,0 +1,38 @@
+{
+  "python.testing.pytestArgs": [
+    "tests",
+    // Coverage is not supported by vscode:
+    // https://github.com/Microsoft/vscode-python/issues/693
+    // Note that this will make pytest fail if pytest-cov is not installed,
+    // if that's the case, then this option needs to be be removed (overrides
+    // can be set at a workspace level, it's up to you to decide what's the
+    // best approach). You might also prefer to only set this option
+    // per-workspace (wherever coverage is used).
+    "--no-cov"
+  ],
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true,
+  "[python]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "explicit"
+    },
+    "editor.defaultFormatter": "charliermarsh.ruff"
+  },
+  "editor.formatOnPaste": false,
+  "editor.formatOnSave": true,
+  "editor.formatOnType": false,
+  "editor.tabSize": 4,
+  "files.autoSave": "afterDelay",
+  "files.trimTrailingWhitespace": true,
+  "git.autofetch": true,
+  "python.analysis.typeCheckingMode": "basic",
+  "python.languageServer": "Pylance",
+  "editor.defaultFormatter": null,
+  "files.exclude": {
+    "**/__pycache__": true,
+    ".pytest_cache": true
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}

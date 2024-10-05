@@ -1,0 +1,22 @@
+{
+  "image": "mcr.microsoft.com/devcontainers/python:3.12",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "charliermarsh.ruff",
+        "ms-python.pylint",
+        "ms-python.vscode-pylance",
+        "visualstudioexptteam.vscodeintellicode",
+        "redhat.vscode-yaml",
+        "esbenp.prettier-vscode",
+        "GitHub.copilot",
+        "tamasfe.even-better-toml",
+        "ryanluker.vscode-coverage-gutters"
+      ],
+      "settings": {
+        "python.terminal.activateEnvInCurrentTerminal": true,
+        "pylint.importStrategy": "fromEnvironment"
+      }
+    }
+  }
+}

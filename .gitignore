@@ -1,0 +1,10 @@
+*.egg-info
+/venv
+/build
+/coverage
+.coverage
+cov.xml
+pytest.log
+__pycache__
+/dist
+coverage.xml
