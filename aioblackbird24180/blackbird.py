@@ -10,10 +10,12 @@ class MatrixState:
     """
     Store the state of the matrix.
 
-    An input can be connected to multiple outputs. An output can be connected to one input.
+    An input can be connected to multiple outputs. An output can be connected to one
+    input.
     """
 
     def __init__(self) -> None:
+        """Initialize the MatrixState instance."""
         self.matrix_input: dict[int, list[int]] = defaultdict(list)
         self.matrix_output: dict[int, int] = {}
 
@@ -66,8 +68,8 @@ class Blackbird24180:
 
     async def get_matrix(self) -> MatrixState:
         """Get the current matrix configuration."""
-        # It seems like sending any data to this endpoint will work, but it cannot be empty
-        # "lcc" is used because the web ui uses this
+        # It seems like sending any data to this endpoint will work, but it cannot be
+        # empty "lcc" is used because the web ui uses this
         response = await self.__post("/cgi-bin/MUH44TP_getsetparams.cgi", "lcc")
         parsed_response = parse_response(response)
         state = MatrixState()

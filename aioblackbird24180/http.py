@@ -16,8 +16,12 @@ Content-Length: {content_length}
 {body}"""
 
 
-class HTTPException(Exception):
+class HTTPExceptionError(Exception):
     """Raised when the HTTP request fails."""
+
+    def __init__(self, status: int) -> None:
+        """Initialize the exception."""
+        super().__init__(f"HTTP request failed with status code {status}")
 
 
 def __process_response(response: bytes) -> tuple[int, str]:
@@ -55,5 +59,5 @@ async def post_request(host: str, port: int, path: str, data: str) -> str:
     await writer.wait_closed()
     status, decoded_response = __process_response(response)
     if status != 200:
-        raise HTTPException(f"HTTP request failed with status code {status}")
+        raise HTTPExceptionError(status)
     return decoded_response
