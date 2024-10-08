@@ -2,8 +2,8 @@
 
 from collections import defaultdict
 
-from .util import parse_response
 from .http import post_request
+from .util import parse_response
 
 
 class MatrixState:
@@ -72,9 +72,8 @@ class Blackbird24180:
         parsed_response = parse_response(response)
         state = MatrixState()
         for output, input in enumerate(parsed_response["Outputbuttom"]):
-            # Skip 0
-            output += 1
-            state.set_output_input(output, int(input))
+            # Add 1 to output to skip 0-indexing
+            state.set_output_input(output + 1, int(input))
         return state
 
     async def set_output(self, output: int, input: int) -> None:
