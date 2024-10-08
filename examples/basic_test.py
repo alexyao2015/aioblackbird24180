@@ -1,8 +1,11 @@
+"""Simple example to demonstrate the library."""
+
 import asyncio
 from aioblackbird24180 import Blackbird24180
 
 
 async def main():
+    """Main method."""
     blackbird = Blackbird24180("localhost", 80)
     status = await blackbird.get_matrix()
     print(status.get_output(1))

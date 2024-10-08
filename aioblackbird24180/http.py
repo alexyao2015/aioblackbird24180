@@ -39,6 +39,7 @@ def __generate_request(method: str, path: str, host: str, body: str) -> bytes:
 
 
 async def post_request(host: str, port: int, path: str, data: str) -> str:
+    """Make a POST request to the HTTP server."""
     reader, writer = await asyncio.open_connection(host, port)
     writer.write(
         __generate_request(
