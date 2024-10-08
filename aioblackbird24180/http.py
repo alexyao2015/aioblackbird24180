@@ -7,6 +7,7 @@
 # responses to workaround this.
 
 import asyncio
+import socket
 
 BASE_HTTP_REQUEST = """{method} {path} HTTP/1.1
 Host: {host}
@@ -14,6 +15,14 @@ Accept: */*
 Content-Length: {content_length}
 
 {body}"""
+
+
+class ConnectExceptionError(Exception):
+    """Raised when the connection fails."""
+
+    def __init__(self, server: str) -> None:
+        """Initialize the exception."""
+        super().__init__(f"Failed to connect to the server {server}")
 
 
 class HTTPExceptionError(Exception):
@@ -44,7 +53,10 @@ def __generate_request(method: str, path: str, host: str, body: str) -> bytes:
 
 async def post_request(host: str, port: int, path: str, data: str) -> str:
     """Make a POST request to the HTTP server."""
-    reader, writer = await asyncio.open_connection(host, port)
+    try:
+        reader, writer = await asyncio.open_connection(host, port)
+    except (socket.gaierror, OSError) as ex:
+        raise ConnectExceptionError(f"{host}:{port}") from ex
     writer.write(
         __generate_request(
             method="POST",
