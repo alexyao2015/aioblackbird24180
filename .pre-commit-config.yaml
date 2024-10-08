@@ -8,7 +8,7 @@ repos:
         language: system
         types: [python]
         entry: scripts/run-in-env.sh ruff check --fix
-        exclude: ^examples/
+        exclude: ^examples/|^tests/
         require_serial: true
         stages: [commit, push, manual]
       - id: ruff-format

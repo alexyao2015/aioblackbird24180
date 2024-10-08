@@ -11,7 +11,8 @@
         "esbenp.prettier-vscode",
         "GitHub.copilot",
         "tamasfe.even-better-toml",
-        "ryanluker.vscode-coverage-gutters"
+        "ryanluker.vscode-coverage-gutters",
+        "stkb.rewrap"
       ],
       "settings": {
         "python.terminal.activateEnvInCurrentTerminal": true,
