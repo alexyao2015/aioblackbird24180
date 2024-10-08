@@ -6,9 +6,21 @@ from tests.common import load_fixture
 
 
 @pytest.fixture(scope="class")
-def status_response():
+def http_request():
     """Load status response."""
-    return load_fixture("status_response.txt")
+    return load_fixture("http_request.txt")
+
+
+@pytest.fixture(scope="class")
+def http_response_body():
+    """Load status response."""
+    return load_fixture("http_response_body.txt")
+
+
+@pytest.fixture(scope="class")
+def http_response():
+    """Load status response."""
+    return load_fixture("http_response.txt")
 
 
 @pytest.fixture(scope="class")

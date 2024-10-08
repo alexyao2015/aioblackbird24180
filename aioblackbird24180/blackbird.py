@@ -1,11 +1,8 @@
 """Core Interface."""
 
 from collections import defaultdict
-from contextlib import suppress
 
-from aiohttp import ClientSession
-from aiohttp.http_exceptions import BadHttpMessage
-
+from .http import post_request
 from .util import parse_response
 
 
@@ -17,8 +14,8 @@ class MatrixState:
     """
 
     def __init__(self) -> None:
-        self._matrix_input: dict[int, list[int]] = defaultdict(list)
-        self._matrix_output: dict[int, int] = {}
+        self.matrix_input: dict[int, list[int]] = defaultdict(list)
+        self.matrix_output: dict[int, int] = {}
 
     def set_output_input(self, output: int, input: int) -> None:
         """
@@ -28,8 +25,8 @@ class MatrixState:
             `output`: the output number to set as int.
             `input`: the input number to set as int.
         """
-        self._matrix_output[output] = input
-        self._matrix_input[input].append(output)
+        self.matrix_output[output] = input
+        self.matrix_input[input].append(output)
 
     def get_input(self, input: int) -> list[int]:
         """
@@ -38,7 +35,7 @@ class MatrixState:
         Parameters:
             `input`: the input number to get as int.
         """
-        return self._matrix_input[input]
+        return self.matrix_input[input]
 
     def get_output(self, output: int) -> int:
         """
@@ -47,44 +44,36 @@ class MatrixState:
         Parameters:
             `output`: the output number to get as int.
         """
-        return self._matrix_output[output]
+        return self.matrix_output[output]
 
 
 class Blackbird24180:
     """Blackbird24180."""
 
-    def __init__(self, host: str, session: ClientSession | None = None) -> None:
+    def __init__(self, host: str, port: int) -> None:
         """
         Initialize the Blackbird24180 instance.
 
         Parameters:
             `host`: the hostname or IP-address of the blackbird matrix as string.
-            `session`: Optional ClientSession instance to use for requests.
+            `port`: the port of the blackbird matrix as int.
         """
         self.host = host
-        if not session:
-            session = ClientSession()
-        self.session = session
+        self.port = port
 
     async def __post(self, path: str, data: str) -> str:
-        async with self.session.request(
-            "post", f"{self.host}/{path}", data=data.encode("utf-8")
-        ) as response:
-            return await response.text()  # type: ignore[no-any-return]
-
-    async def close(self) -> None:
-        """Close the session."""
-        await self.session.close()
+        return await post_request(self.host, self.port, path, data)
 
     async def get_matrix(self) -> MatrixState:
         """Get the current matrix configuration."""
         # It seems like sending any data to this endpoint will work, but it cannot be empty
         # "lcc" is used because the web ui uses this
-        response = await self.__post("cgi-bin/MUH44TP_getsetparams.cgi", "lcc")
+        response = await self.__post("/cgi-bin/MUH44TP_getsetparams.cgi", "lcc")
         parsed_response = parse_response(response)
         state = MatrixState()
-        for output in range(1, 9):
-            state.set_output_input(output, int(parsed_response[f"CH{output}Output"]))
+        for output, input in enumerate(parsed_response["Outputbuttom"]):
+            # Add 1 to output to skip 0-indexing
+            state.set_output_input(output + 1, int(input))
         return state
 
     async def set_output(self, output: int, input: int) -> None:
@@ -95,8 +84,6 @@ class Blackbird24180:
             `output`: the output number to modify as an int.
             `input`: the input number to set as int.
         """
-        # Expect a BadHttpMessage because the server replies with an invalid http response
-        with suppress(BadHttpMessage):
-            await self.__post(
-                "cgi-bin/MMX32_Keyvalue.cgi", f"{{CMD=OUT{output:02}:{input:02}."
-            )
+        await self.__post(
+            "/cgi-bin/MMX32_Keyvalue.cgi", f"{{CMD=OUT{output:02}:{input:02}."
+        )
