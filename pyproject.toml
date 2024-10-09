@@ -150,6 +150,7 @@ ignore = [
   "ISC001",  # Conflict with the Ruff formatter
   "A002",    # Shadow built-in, allows shadowing input for better readability
   "A001",    # Shadow built-in, allows shadowing input for better readability
+  "TRY003",  # Annoying, not really useful
 ]
 
 select = ["ALL"]

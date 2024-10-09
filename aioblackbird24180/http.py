@@ -17,20 +17,12 @@ Content-Length: {content_length}
 {body}"""
 
 
-class ConnectExceptionError(Exception):
+class ConnectError(Exception):
     """Raised when the connection fails."""
 
-    def __init__(self, server: str) -> None:
-        """Initialize the exception."""
-        super().__init__(f"Failed to connect to the server {server}")
 
-
-class HTTPExceptionError(Exception):
+class HTTPError(Exception):
     """Raised when the HTTP request fails."""
-
-    def __init__(self, status: int) -> None:
-        """Initialize the exception."""
-        super().__init__(f"HTTP request failed with status code {status}")
 
 
 def __process_response(response: bytes) -> tuple[int, str]:
@@ -56,7 +48,7 @@ async def post_request(host: str, port: int, path: str, data: str) -> str:
     try:
         reader, writer = await asyncio.open_connection(host, port)
     except (socket.gaierror, OSError) as ex:
-        raise ConnectExceptionError(f"{host}:{port}") from ex
+        raise ConnectError(f"Failed to connect to the server {host}:{port}") from ex
     writer.write(
         __generate_request(
             method="POST",
@@ -71,5 +63,5 @@ async def post_request(host: str, port: int, path: str, data: str) -> str:
     await writer.wait_closed()
     status, decoded_response = __process_response(response)
     if status != 200:
-        raise HTTPExceptionError(status)
+        raise HTTPError(f"HTTP request failed with status code {status}")
     return decoded_response
