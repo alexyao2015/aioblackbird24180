@@ -35,7 +35,7 @@ test = [
   "pytest-xdist==3.8.0",
   "ruff==0.14.0",
   "safety==3.6.2",
-  "tomli==2.2.1",
+  "tomli==2.3.0",
 ]
 
 [tool.codespell]
